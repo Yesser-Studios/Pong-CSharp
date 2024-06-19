@@ -1,0 +1,28 @@
+name: pong-by-yesser-studios
+version: '99.99.99'
+# ^ this will be changed by the GitHub action.
+grade: devel
+# ^ this will also be changed by the GitHub action.
+summary: A Pong clone by Yesser Studios
+description: |
+  This Pong clone has everything you would expect from a Pong clone - two pads and a ball.
+  Play it with a keyboard or a gamepad with a friend.
+
+base: core20
+confinement: devmode
+# ^ this will also be changed by the GitHub action.
+
+parts:
+  pong-by-yesser-studios:
+    plugin: dotnet
+    dotnet-build-configuration: Release
+    dotnet-self-contained-runtime-identifier: linux-x64
+    source: ./Pong.Desktop
+    build-packages:
+      - dotnet-sdk-8.0
+    stage-packages:
+      - libicu70
+
+apps:
+  pong-by-yesser-studios:
+    command:  bin/linux-x64/net8.0/linux-x64/publish/Pong.Desktop
