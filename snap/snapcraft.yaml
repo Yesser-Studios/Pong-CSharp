@@ -1,5 +1,5 @@
 name: pong-by-yesser-studios
-version: '99.99.99'
+version: '0.0.1'
 # ^ this will be changed by the GitHub action.
 grade: devel
 # ^ this will also be changed by the GitHub action.
@@ -17,12 +17,16 @@ parts:
     plugin: dotnet
     dotnet-build-configuration: Release
     dotnet-self-contained-runtime-identifier: linux-x64
-    source: ./Pong.Desktop
+    source: .
     build-packages:
       - dotnet-sdk-8.0
     stage-packages:
       - libicu70
+    override-build: |
+      cd Pong.Desktop
+      dotnet restore
+      dotnet publish -p:Platform=Linux -c Release -o $SNAPCRAFT_PART_INSTALL --self-contained --use-current-runtime
 
 apps:
   pong-by-yesser-studios:
-    command:  bin/linux-x64/net8.0/linux-x64/publish/Pong.Desktop
+    command: Pong.Desktop
