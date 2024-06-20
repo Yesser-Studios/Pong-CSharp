@@ -9,7 +9,7 @@ description: |
   Play it with a keyboard or a gamepad with a friend.
 
 base: core22
-confinement: devmode
+confinement: classic
 # ^ this will also be changed by the GitHub action.
 
 parts:
