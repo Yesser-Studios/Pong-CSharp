@@ -9,7 +9,7 @@ description: |
   Play it with a keyboard or a gamepad with a friend.
 
 base: core22
-confinement: classic
+confinement: devmode
 # ^ this will also be changed by the GitHub action.
 
 parts:
@@ -22,6 +22,9 @@ parts:
       - dotnet-sdk-8.0
     stage-packages:
       - libicu70
+      - libpulse0
+      - libglu1-mesa
+      - libgl1
     override-build: |
       cd Pong.Desktop
       dotnet restore
@@ -30,3 +33,5 @@ parts:
 apps:
   pong-by-yesser-studios:
     command: Pong.Desktop
+    plugs:
+      - opengl
