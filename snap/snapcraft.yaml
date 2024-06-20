@@ -22,16 +22,32 @@ parts:
       - dotnet-sdk-8.0
     stage-packages:
       - libicu70
-      - libpulse0
       - libglu1-mesa
       - libgl1
     override-build: |
       cd Pong.Desktop
       dotnet restore
       dotnet publish -p:Platform=Linux -c Release -o $SNAPCRAFT_PART_INSTALL --self-contained --use-current-runtime
+  graphics-core22:
+    after: [ pong-by-yesser-studios ]
+    source: https://github.com/MirServer/graphics-core22.git
+    plugin: dump
+    override-prime: |
+      craftctl default
+      ${CRAFT_PART_SRC}/bin/graphics-core22-cleanup mesa-core22 nvidia-core22
+    prime:
+    - bin/graphics-core22-wrapper
+
+plugs:
+  graphics-core22:
+    interface: content
+    target: $SNAP/graphics
+    default-provider: mesa-core22
 
 apps:
   pong-by-yesser-studios:
+    command-chain:
+    - bin/graphics-core22-wrapper
     command: Pong.Desktop
     plugs:
       - opengl
