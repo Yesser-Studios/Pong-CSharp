@@ -1,5 +1,5 @@
 [Desktop Entry]
 Type=Application
 Name=Pong by Yesser Studios
-Exec={SNAP}/Pong.Desktop
+Exec=pong-by-yesser-studios
 Icon=${SNAP}/meta/gui/pong-by-yesser-studios.png
