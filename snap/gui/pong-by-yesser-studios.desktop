@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Pong by Yesser Studios
+Exec={SNAP}/Pong.Desktop
+Icon=${SNAP}/meta/gui/pong-by-yesser-studios.png
