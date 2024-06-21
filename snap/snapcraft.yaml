@@ -51,3 +51,4 @@ apps:
     command: Pong.Desktop
     plugs:
       - opengl
+      - joystick
