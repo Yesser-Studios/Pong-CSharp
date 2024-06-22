@@ -70,13 +70,16 @@ namespace Pong.Game
         
         public Game1()
         {
+            Console.WriteLine("Constructing Game1...");
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
+            Console.WriteLine("Constructed Game1");
         }
 
         protected override void Initialize()
         {
+            Console.WriteLine("Initializing...");
             _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             _graphics.IsFullScreen = true;
@@ -88,7 +91,11 @@ namespace Pong.Game
             
             _graphics.ApplyChanges();
 
+            Console.WriteLine("Applied changes to graphics");
+
             base.Initialize();
+
+            Console.WriteLine("base.Initialize run");
         }
 
         protected void Restart()
@@ -123,7 +130,9 @@ namespace Pong.Game
 
         protected override void LoadContent()
         {
+            Console.WriteLine("Loading content...");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            Console.WriteLine("Spritebatch created");
 
             _leftPad = new GameObject(
                 Content.Load<Texture2D>("Pad"),
@@ -133,6 +142,8 @@ namespace Pong.Game
                 _gameResolution.X,
                 _gameResolution.Y);
 
+            Console.WriteLine("Created left pad");
+            
             _rightPad = new GameObject(
                 Content.Load<Texture2D>("Pad"),
                 new Vector2(_gameResolution.X - PadXOffset, _gameResolution.Y / 2),
@@ -141,21 +152,33 @@ namespace Pong.Game
                 _gameResolution.X,
                 _gameResolution.Y);
 
+            Console.WriteLine("Created right pad");
+
             _ballTex = Content.Load<Texture2D>("Ball");
+
+            Console.WriteLine("Loaded ball texture");
 
             GenerateBall();
 
+            Console.WriteLine("Generated ball");
+
             _font = Content.Load<SpriteFont>("GameFont");
+
+            Console.WriteLine("Loaded font");
 
             _renderTarget = new RenderTarget2D(
                 GraphicsDevice,
                 _gameResolution.X,
                 _gameResolution.Y);
 
+            Console.WriteLine("Created rendertarget");
+
             _renderTargetDest = GetRenderTargetDestination(
                 _gameResolution,
                 _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight);
+
+            Console.WriteLine("Set RenderTarget destination");
         }
 
         protected float GenerateRandomBallYVelocity()
@@ -275,9 +298,12 @@ namespace Pong.Game
         #region Update and Drawing
         protected override void Update(GameTime gameTime)
         {
+            Console.WriteLine("Updating");
             KeyboardState keyboard = Keyboard.GetState();
+            Console.WriteLine("Got keyboard state");
             GamePadState plr1GamepadState = GamePad.GetState(PlayerIndex.One);
             GamePadState plr2GamepadState = GamePad.GetState(PlayerIndex.Two);
+            Console.WriteLine("Got gamepad state");
 
             bool leftUsedKeyboard = false;
             bool rightUsedKeyboard = false;
@@ -288,14 +314,20 @@ namespace Pong.Game
 
             #region Exit, Restart and Bot controls
 
+            Console.WriteLine("Checking exit");
             if (keyboard.IsKeyDown(Keys.Escape))
+            {
+                Console.WriteLine("Exiting...");
                 Exit();
+            }
 
+            Console.WriteLine("Checking restart");
             if (keyboard.IsKeyDown(Keys.R)
                 || plr1GamepadState.IsButtonDown(Buttons.Start)
                 || plr2GamepadState.IsButtonDown(Buttons.Start))
                 Restart();
 
+            Console.WriteLine("Checking bot button");
             if ((!_botButtonDown && keyboard.IsKeyDown(Keys.B))
                 || plr1GamepadState.IsButtonDown(Buttons.Y)
                 || plr2GamepadState.IsButtonDown(Buttons.Y))
@@ -312,7 +344,8 @@ namespace Pong.Game
             #endregion
             
             #region Keyboard controls
-            
+
+            Console.WriteLine("left up");
             // Left Up
             if (keyboard.IsKeyDown(Keys.W))
             {
@@ -320,6 +353,7 @@ namespace Pong.Game
                 leftUsedKeyboard = true;
             }
 
+            Console.WriteLine("left down");
             // Left Down
             if (keyboard.IsKeyDown(Keys.S))
             {
@@ -327,6 +361,7 @@ namespace Pong.Game
                 leftUsedKeyboard = true;
             }
 
+            Console.WriteLine("right up");
             // Right Up
             if (keyboard.IsKeyDown(Keys.Up) && !_playWithBot)
             {
@@ -334,6 +369,7 @@ namespace Pong.Game
                 rightUsedKeyboard = true;
             }
 
+            Console.WriteLine("right down");
             // Right Down
             if (keyboard.IsKeyDown(Keys.Down) && !_playWithBot)
             {
@@ -344,7 +380,8 @@ namespace Pong.Game
             #endregion
 
             #region Gamepad controls
-            
+
+            Console.WriteLine("left thumb");
             // Left Thumbstick
             if ((plr1GamepadState.ThumbSticks.Left.Y > GamepadDeadzone 
                  || plr1GamepadState.ThumbSticks.Left.Y < -GamepadDeadzone)
@@ -353,7 +390,8 @@ namespace Pong.Game
                 _leftPad.MoveNoOOS(0, -plr1GamepadState.ThumbSticks.Left.Y * PadSpeed * GamepadSensitivity);
                 leftUsedStick = true;
             }
-            
+
+            Console.WriteLine("right thumb");
             // Right Thumbstick
             if ((plr2GamepadState.ThumbSticks.Left.Y > GamepadDeadzone 
                  || plr2GamepadState.ThumbSticks.Left.Y < -GamepadDeadzone) 
@@ -362,7 +400,8 @@ namespace Pong.Game
                 _rightPad.MoveNoOOS(0, -plr2GamepadState.ThumbSticks.Left.Y * PadSpeed * GamepadSensitivity);
                 rightUsedStick = true;
             }
-            
+
+            Console.WriteLine("left dpad up");
             // Left DPad Up
             if (plr1GamepadState.DPad.Up == ButtonState.Pressed
                 && !leftUsedKeyboard && !leftUsedStick)
@@ -371,6 +410,7 @@ namespace Pong.Game
                 leftUsedDPad = true;
             }
 
+            Console.WriteLine("left dpad down");
             // Left DPad Down
             if (plr1GamepadState.DPad.Down == ButtonState.Pressed
                 && !leftUsedKeyboard && !leftUsedStick)
@@ -379,6 +419,7 @@ namespace Pong.Game
                 leftUsedDPad = true;
             }
 
+            Console.WriteLine("right dpad up");
             // Right DPad Up
             if (plr2GamepadState.DPad.Up == ButtonState.Pressed
                 && !rightUsedKeyboard && !rightUsedStick
@@ -388,6 +429,7 @@ namespace Pong.Game
                 rightUsedDPad = true;
             }
 
+            Console.WriteLine("right dpad down");
             // Right DPad down
             if (plr2GamepadState.DPad.Down == ButtonState.Pressed
                 && !rightUsedKeyboard && !rightUsedStick
@@ -401,29 +443,37 @@ namespace Pong.Game
 
             #region Bot Movement
 
+            Console.WriteLine("bot moov");
             if (_playWithBot && _roundStarted)
             {
+                Console.WriteLine("bot mooving");
                 if (_botTargetY > _rightPad.Y + (_rightPad.Height * BotDeadzone)
                     || _botTargetY < _rightPad.Y - (_rightPad.Height * BotDeadzone))
                     _rightPad.MoveNoOOS(0, _rightPad.Y < _botTargetY ? PadSpeed : -PadSpeed);
+                Console.WriteLine("bot mooved");
             }
 
             #endregion
 
+            Console.WriteLine("set moved");
             bool moved = leftUsedKeyboard || rightUsedKeyboard
                 || leftUsedStick || rightUsedStick
                 || leftUsedDPad || rightUsedDPad;
 
+            Console.WriteLine("set leftMoved");
             bool leftMoved = leftUsedKeyboard
                 || leftUsedStick
                 || leftUsedDPad;
 
+            Console.WriteLine("set rightMoved");
             bool rightMoved = rightUsedKeyboard
                 || rightUsedStick
                 || rightUsedDPad;
 
+            Console.WriteLine("start round");
             if ((leftMoved && _leftStopped) || (rightMoved && _rightStopped))
             {
+                Console.WriteLine("sim ball");
                 if (!_roundStarted && _ball.Velocity.X > 0)
                     SimulateBall();
                 
@@ -432,56 +482,78 @@ namespace Pong.Game
                 _gameStarted = true;
             }
 
+            Console.WriteLine("set left stopped");
             if (!leftMoved)
                 _leftStopped = true;
 
+            Console.WriteLine("set right stopped");
             if (!rightMoved)
                 _rightStopped = true;
 
+            Console.WriteLine("moov ball");
             if (_roundStarted)
                 _ball.MoveByVelocity();
 
+            Console.WriteLine("check score");
             if (_roundStarted)
             {
                 ScreenSide scored = _ball.CheckScored();
                 if (scored != ScreenSide.Center)
                     Scored(scored);
             }
-            
+
+            Console.WriteLine("call base update");
             base.Update(gameTime);
-            
+
+            Console.WriteLine("call platform specific update");
             _platformSpecific?.UpdateFinished(_leftScore, _rightScore, _gameStarted);
+            Console.WriteLine("end update");
         }
 
         private void WriteStatusText(string text)
         {
+            Console.WriteLine("Writing status...");
             Vector2 textMiddlePoint = _font.MeasureString(text) / 2;
             // Places text in center of the screen
             Vector2 position = new Vector2(_graphics.PreferredBackBufferWidth / 2, _graphics.PreferredBackBufferHeight / 10);
             _spriteBatch.DrawString(_font, text, position, Color.White, 0, textMiddlePoint, 1.0f, SpriteEffects.None, 0.5f);
+            Console.WriteLine("Status written");
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            Console.WriteLine("Draw called");
             GraphicsDevice.SetRenderTarget(_renderTarget);
+            Console.WriteLine("Render target set");
 
             GraphicsDevice.Clear(Color.Black);
 
+            Console.WriteLine("Drawing elements...");
             _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
+            Console.WriteLine("SpriteBatch begun");
             _ball.Draw();
+            Console.WriteLine("ball drawn");
             _leftPad.Draw();
+            Console.WriteLine("leftpad drawn");
             _rightPad.Draw();
+            Console.WriteLine("Right pad drawn");
 
             _spriteBatch.End();
+            Console.WriteLine("spritebatch ended");
 
             base.Draw(gameTime);
+            Console.WriteLine("Called base.draw");
 
             GraphicsDevice.SetRenderTarget(null);
+            Console.WriteLine("Render target disabled");
             GraphicsDevice.Clear(new Color(30, 30, 30));
+            Console.WriteLine("Screen cleared");
 
             _spriteBatch.Begin(samplerState: SamplerState.PointWrap);
+            Console.WriteLine("basic spritebatch begun");
 
             _spriteBatch.Draw(_renderTarget, _renderTargetDest, Color.White);
+            Console.WriteLine("rendertarget drawn");
 
             #region Text
             if (!_gameEnded)
@@ -500,6 +572,7 @@ namespace Pong.Game
             #endregion
 
             _spriteBatch.End();
+            Console.WriteLine("spritebatch ended");
         }
 
         Rectangle GetRenderTargetDestination(Point resolution, int preferredBackBufferWidth, int preferredBackBufferHeight)
